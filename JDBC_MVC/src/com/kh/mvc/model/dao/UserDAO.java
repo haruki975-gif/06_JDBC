@@ -1,5 +1,11 @@
 package com.kh.mvc.model.dao;
 
+import java.sql.Connection;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.kh.mvc.model.dto.UserDTO;
+
 /**
  * DAO(Data Access Object)
  * 
@@ -37,10 +43,44 @@ public class UserDAO {
 	 * 5) 결과받기 : 
 	 * 								> SELECT : ResultSet타입 객체(조회 데이터 담김)
 	 * 								> DML 	 : int(처리된 행의 개수 반환)
+	 * 
+	 * 6_1) ResultSet에 담겨있는 데이터들을 하나하나씩 뽑아서 DTO객체 필드에
+	 * 			옮겨담은 후 조회 결과가 여러 행일 경우 List로 관리
+	 * 6_2) 트랜잭션 처리
+	 * 7(생략될 수 있음)) 자원 반납(close) => 생성의 역순으로
+	 * 8) 결과반환 -> Controller
+	 * 								SELECT > 6_1에서 만든 거
+	 * 								DML : 처리된 행의 개수
 	 */
 	
-	public void findAll() {
+	public List<UserDTO> findAll() {
 		
+		// DB 가야지~~
+		/*
+		 * 한 행의 회원의 정보를 DTO에 담아서 전송
+		 * VO / DTO / Entity
+		 * 
+		 * 1명의 회원의 정보는 1개의 UserDTO객체의 필드에 값을 담아야겠다.
+		 * 
+		 * 문제점 : UserDTO가 몇 개가 나올지 알 수 없음
+		 */
+		
+//		Connection conn;
+//		
+//		conn.setAutoCommit(false);
+		
+		List<UserDTO> list = new ArrayList();
+		String sql = "SELECT"
+									+ "USER_NO"
+									+ ", USER_ID"
+									+ ", USER_PW"
+									+ ", USER_NAME"
+									+ ", ENROLL_DATE "
+									+ "FROM "
+									+ "TB_USER "
+									+ "ORDER BY "
+									+ "ENROLL_DATE DESC";
+		return list;
 	}
 	
 	
