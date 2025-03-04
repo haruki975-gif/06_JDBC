@@ -37,9 +37,9 @@ public class JDBCExample6 {
 				""";
 		
 		try(
-			Connection conn = DriverManager.getConnection(url, userName, password);
-			PreparedStatement pstmt = conn.prepareStatement(sql);
-			Scanner sc = new Scanner(System.in);
+				Connection conn = DriverManager.getConnection(url, userName, password);
+				PreparedStatement pstmt = conn.prepareStatement(sql);
+				Scanner sc = new Scanner(System.in);
 			){
 			
 			// 자동 커밋 끄기

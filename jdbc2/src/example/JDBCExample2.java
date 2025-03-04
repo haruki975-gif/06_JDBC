@@ -69,7 +69,7 @@ public class JDBCExample2 {
 			
 			/* ?(placeholder)에 알맞은 값 세팅 */
 			// pstmt.set자료형(?순서, 대입할 값)
-			pstmt.setString(1,id); // 아이디 변수값에 '' 추가하여 SQL에 대입
+			pstmt.setString(1, id); // 아이디 변수값에 '' 추가하여 SQL에 대입
 			pstmt.setString(2, pw);
 			pstmt.setString(3, name);
 			

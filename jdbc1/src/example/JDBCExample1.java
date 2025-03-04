@@ -149,21 +149,4 @@ public class JDBCExample1 {
 		
 	}
 	
-	
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
