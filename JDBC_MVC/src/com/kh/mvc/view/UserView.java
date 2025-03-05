@@ -1,5 +1,6 @@
 package com.kh.mvc.view;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import com.kh.mvc.controller.UserController;
@@ -29,8 +30,16 @@ public class UserView {
 			System.out.println("9. 프로그램 종료");
 			System.out.print("이용할 메뉴를 선택해주세요 > ");
 			
-			int menuNo = sc.nextInt();
-			sc.nextLine(); // 입력 버퍼에 남은 내용 날리기
+			int menuNo = 0;
+			
+			try {
+				menuNo = sc.nextInt();
+			} catch(InputMismatchException e){
+				sc.nextLine();
+				continue;
+			}
+			
+			sc.nextLine();
 			
 			switch(menuNo) {
 				case 1: 
