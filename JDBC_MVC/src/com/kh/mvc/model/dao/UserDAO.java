@@ -96,14 +96,18 @@ public class UserDAO {
 									+ "ORDER BY "
 									+ "ENROLL_DATE DESC";
 		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		
 		try {
 			// Connection을 줘
-			Connection conn = DriverManager.getConnection("jdbc:oracle:thin:@112.221.156.34:12345:XE"
+			conn = DriverManager.getConnection("jdbc:oracle:thin:@112.221.156.34:12345:XE"
 					, "KH17_LEB", "KH1234");
 			
 			// 편집기 생성
-			PreparedStatement pstmt = conn.prepareStatement(sql);
-			ResultSet rset = pstmt.executeQuery();
+			pstmt = conn.prepareStatement(sql);
+			rset = pstmt.executeQuery();
 			
 			while(rset.next()) { // 행이 있으면 true 반환
 				// 조회 결과 컬럼 값을 DTO필드에 담는 작업 및 리스트 요소로 추가
@@ -116,6 +120,7 @@ public class UserDAO {
 				user.setUserName(rset.getString("USER_NAME"));
 				user.setEnrollDate(rset.getDate("ENROLL_DATE"));
 				// user는 지역변수라서 {}밖에 나가면 사라짐
+				// -> list에 담아서 주소를 참조받게 함
 				
 				list.add(user);
 			}
@@ -124,14 +129,25 @@ public class UserDAO {
 			System.out.println("오타가 나지 않았나요? 확인하셨나요? 두 번 봤나요?");
 		}
 		
+		// finally에 의미가 생기려면 try 블럭 안에서 return 되어야 함
+		finally {
+			try {
+				if(rset != null) rset.close();
+			} catch (SQLException e) {
+				System.out.println("DB서버 이상해...");
+			}
+			try {
+				if(pstmt != null) pstmt.close();
+			} catch (SQLException e) {
+				System.out.println("PreparedStatement 이상해...");
+			}
+			try {
+				if(conn != null) conn.close();
+			} catch (SQLException e) {
+				System.out.println("Connection 이상해...");
+			}
+		}
 		
 		return list;
 	}
-	
-	
-	
-	
-	
-	
-	
 }

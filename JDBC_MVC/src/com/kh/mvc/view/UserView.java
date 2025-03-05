@@ -1,9 +1,11 @@
 package com.kh.mvc.view;
 
 import java.util.InputMismatchException;
+import java.util.List;
 import java.util.Scanner;
 
 import com.kh.mvc.controller.UserController;
+import com.kh.mvc.model.dto.UserDTO;
 
 /**
  * MemberView 클래스는 JDBC실습을 위해 생성하였으며,
@@ -34,6 +36,7 @@ public class UserView {
 			
 			try {
 				menuNo = sc.nextInt();
+				
 			} catch(InputMismatchException e){
 				sc.nextLine();
 				continue;
@@ -62,7 +65,16 @@ public class UserView {
 		System.out.println("\n--- 회원 전체 목록 ---");
 		
 		// 연산코드는 무조건 userController로 보냄 => 회원 전체 목록 좀 가져와줘
-		userController.findAll();
+		List<UserDTO> list = userController.findAll();
+		
+		System.out.println("\n조회된 총 회원의 수는 " + list.size() + "명 입니다.");
+		
+		if(list.isEmpty()) { 
+			
+		} else {
+			
+		}
+		
 	}
 	
 	
