@@ -13,7 +13,7 @@ import com.kh.mvc.model.dto.UserDTO;
 /**
  * DAO(Data Access Object)
  * 
- * 데이터베이스 관련된 작업(CRUD)을 전문적으로 담당하는 객체
+ * 데이터베이스 관련된 작업(CRUD->preparedStatement가 함)을 전문적으로 담당하는 객체
  * DAO안에 모든 메소드들은 데이터베이스와 관련된 기능으로 만들 것
  * 
  * Controller를 통해 호출된 기능을 수행
@@ -63,6 +63,11 @@ public class UserDAO {
 	 * 								DML : 처리된 행의 개수
 	 */
 	
+	// DB 정보 상수로 선언
+//	private final String URL = "jdbc:oracle:thin:@112.221.156.34:12345:XE";
+//	private final String USERNAME = "KH17_LEB";
+//	private final String PASSWORD = "KH1234";
+	
 	// 프로그램 실행 시 딱 한 번만 실행(static 영역에 메모리 할당)
 	static {
 		try {
@@ -72,7 +77,7 @@ public class UserDAO {
 		}
 	}
 	
-	public List<UserDTO> findAll() {
+	public List<UserDTO> findAll(Connection conn) {
 		
 		// DB 가야지~~
 		/*
@@ -85,7 +90,7 @@ public class UserDAO {
 		 */
 		
 		List<UserDTO> list = new ArrayList();
-		String sql = "SELECT"
+		String sql = "SELECT "
 									+ "USER_NO"
 									+ ", USER_ID"
 									+ ", USER_PW"
@@ -96,14 +101,13 @@ public class UserDAO {
 									+ "ORDER BY "
 									+ "ENROLL_DATE DESC";
 		
-		Connection conn = null;
+		// Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
 		
 		try {
 			// Connection을 줘
-			conn = DriverManager.getConnection("jdbc:oracle:thin:@112.221.156.34:12345:XE"
-					, "KH17_LEB", "KH1234");
+			// conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
 			
 			// 편집기 생성
 			pstmt = conn.prepareStatement(sql);
@@ -126,6 +130,7 @@ public class UserDAO {
 			}
 			
 		} catch (SQLException e) {
+			e.printStackTrace();
 			System.out.println("오타가 나지 않았나요? 확인하셨나요? 두 번 봤나요?");
 		}
 		
@@ -150,4 +155,78 @@ public class UserDAO {
 		
 		return list;
 	}
+	
+	
+	/**
+	 * @param user 사용자가 입력한 아이디 / 비밀번호 / 이름이 각각 필드에 대입되어있음
+	 * @return 아직 뭐 돌려줄지 안 정함
+	 */
+	public int insertUser(UserDTO user) {
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		
+		String sql = """
+				INSERT INTO 
+					TB_USER
+				VALUES(
+					SEQ_USER_NO.NEXTVAL, ?, ?, ?, SYSDATE)
+				""";
+		
+		int result = 0;
+		
+		try {
+			// conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+			
+			// conn.setAutoCommit(false); auto 커밋 끄기
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, user.getUserId());
+			pstmt.setString(2, user.getUserPw());
+			pstmt.setString(3, user.getUserName());
+			
+			// 조작된 행의 개수를 돌려줌 (없으면 0 반환)
+			result = pstmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			
+		} finally {
+			
+			try {
+				if(pstmt != null && !pstmt.isClosed()) pstmt.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			
+			try {
+				if(conn != null) conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			
+		}
+		return result;
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }
